@@ -23,18 +23,43 @@
 
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
+		var user = window.prompt("insert your name")
 		var socket = io()
+
+		var messages = document.getElementById("messages")
 		sockSubmit = () =>{
 			let msg = document.getElementById("msg")
-			socket.emit("chat", msg.value)
+			let pack = {
+				user: user,
+				msg: msg.value
+			}
+			socket.emit("chat", pack)
 			msg.value = ""
 		}
-		socket.on("chat", (msg)=>{
-			var messages = document.getElementById("messages")
-			let li = document.createElement("li")
-			li.innerText=msg
-			messages.append( li)
+
+		//LIST OF EVENTS POPOUTED FROM SERVER
+		socket.on("chat", (pack) => {
+			let text //= pack.user + " says: " + pack.msg
+			if (user == pack.user) {text  = "you says: " + pack.msg}
+			else {text = pack.user + " says: " + pack.msg}
+			addNode(messages, text)
 		})
+
+		socket.on("client_disconnect", (msg) => {
+			addNode(messages, msg )
+			console.log(msg)
+		})
+
+		socket.on("client_connection", (msg) => {
+			addNode(messages, msg )
+			console.log(msg)
+		})
+
+		let addNode = (list, msg) => {
+			let li = document.createElement( "li")
+			li.innerText=msg
+			list.append( li)
+		}
 	</script>
 </body>
 </html>

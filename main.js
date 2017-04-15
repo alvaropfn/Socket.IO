@@ -9,11 +9,14 @@ app.get("/",(req, res)=>{
 
 io.on("connection", (socket)=>{
 	console.log("client connected")
-	socket.on("chat", (msg)=>{
-		io.emit('chat', msg)
+	socket.broadcast.emit('client_connection', "client connected")
+
+	socket.on("chat", (pack)=>{
+		io.emit('chat',pack)
 	})
+
 	socket.on("disconnect", ()=>{
-		console.log("a client disconnect")
+		socket.broadcast.emit("client_disconnect", "a client disconnect")
 	})
 })
 
