@@ -10,7 +10,10 @@ app.get("/",(req, res)=>{
 io.on("connection", (socket)=>{
 	console.log("client connected")
 	socket.on("chat", (msg)=>{
-		console.log(msg)
+		io.emit('chat', msg)
+	})
+	socket.on("disconnect", ()=>{
+		console.log("a client disconnect")
 	})
 })
 

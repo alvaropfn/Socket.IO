@@ -23,13 +23,18 @@
 
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
-		var socket =io()
+		var socket = io()
 		sockSubmit = () =>{
 			let msg = document.getElementById("msg")
-			socket.emit("chat",msg.value)
-			console.log(msg.value)
+			socket.emit("chat", msg.value)
 			msg.value = ""
 		}
+		socket.on("chat", (msg)=>{
+			var messages = document.getElementById("messages")
+			let li = document.createElement("li")
+			li.innerText=msg
+			messages.append( li)
+		})
 	</script>
 </body>
 </html>
